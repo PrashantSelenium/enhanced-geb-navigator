@@ -1,0 +1,55 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+sourceCompatibility = 1.6
+group = "com.menonvarun.geb"
+version = '0.1-SNAPSHOT'
+
+if (System.properties["release"] == "yes") {
+    version = version.substring(0, version.indexOf("-SNAPSHOT"))
+    print(version)
+}
+def isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.1.5'
+    compile "org.gebish:geb-core:0.9.3"
+    compile "org.seleniumhq.selenium:selenium-java:2.43.1"
+    testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository(url: "file:///H:/opt/github/mvn-repo/releases")
+        snapshotRepository(url: "file:///H:/opt/github/mvn-repo/snapshots")
+        pom.project {
+            licenses {
+                license {
+                    name "The Apache Software License, Version 2.0"
+                    url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    distribution "repo"
+                }
+            }
+
+            scm {
+                connection "scm:git:git://github.com:menonvarun/enhanced-geb-navigator.git"
+                developerConnection "scm:git:ssh://git@github.com:menonvarun/enhanced-geb-navigator.git"
+                url "https://github.com/menonvarun/enhanced-geb-navigator"
+            }
+
+            developers {
+                developer {
+                    id "menonvarun"
+                    name "Varun Menon"
+                    email "mr.varun.menon@gmail.com"
+                }
+            }
+        }
+
+    }
+}
